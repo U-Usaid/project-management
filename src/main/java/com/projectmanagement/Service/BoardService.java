@@ -24,13 +24,7 @@ public class BoardService {
     }
 
     public Board getBoardId(Integer boardId){
-        Board searchBoard = null;
-        Optional<Board> availableBoard = boardRepository.findById(boardId);
-
-        if (availableBoard.isPresent()){
-            searchBoard = availableBoard.get();
-        }
-        return searchBoard;
+        return boardRepository.findById(boardId).orElse(null);
     }
 
 //    public Board updateBoard(@PathVariable(name ="id") Integer boardId, @RequestBody Board updatingBoard){
@@ -41,12 +35,12 @@ public class BoardService {
 
 
 
-    public Board deleteBoard(@PathVariable(name = "id") Integer id){
-        Board availableBoard = getBoardId(id);
-
-        if(availableBoard != null){
-            boardRepository.delete(availableBoard);
+    public boolean deleteBoard(Integer boardId){
+        Board board = boardRepository.findById(boardId).orElse(null);
+        if (board == null) {
+            return false; // Board not found
         }
-        return availableBoard;
+        boardRepository.delete(board);
+        return true;
     }
 }
